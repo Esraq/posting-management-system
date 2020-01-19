@@ -20,20 +20,32 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+    public function redirectTo(){
+        
+        // User role
+        //$role = Auth::user()->role->name; 
+        $user=auth()->user();
+        $role=$user->type;
+        // Check user role
+        switch ($role) {
+            
+            case 'user':
+                    return 'home';
+                break;
+             case 'uddokta':
+                return 'uddokta-dashboard';
+            break;
+            case 'super-admin':
+                return 'super-admin';
+            break;      
+
+            default:
+                    return '/login'; 
+                break;
+        }
     }
 }
